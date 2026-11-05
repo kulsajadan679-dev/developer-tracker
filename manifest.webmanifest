@@ -1,0 +1,10 @@
+{
+  "name": "Developer Tracker",
+  "short_name": "Dev Tracker",
+  "description": "Software developer preparation checklist and study planner",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b1220",
+  "theme_color": "#101827",
+  "icons": []
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<meta name="description" content="Personal software developer preparation tracker">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Developer Tracker</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d2e;--panel2:#19263a;--text:#edf3fc;--muted:#9aabc2;--line:#2b3a50;--accent:#61d6a5;--blue:#83b7ff;--danger:#ff8585}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{padding:22px 18px 14px;max-width:1050px;margin:auto}h1{font-size:26px;margin:0 0 4px}h2{font-size:18px;margin:0 0 12px}h3{font-size:15px;margin:0 0 7px}.muted,small{color:var(--muted)}main{max-width:1050px;margin:auto;padding:0 16px 40px}.hero,.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:16px;margin-bottom:14px}.hero{background:linear-gradient(130deg,#172c3d,#142136)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.stat{background:#ffffff0b;border-radius:12px;padding:12px}.stat strong{display:block;font-size:23px;color:var(--accent)}.progress{height:9px;background:#2a3b50;border-radius:99px;overflow:hidden}.bar{height:100%;background:var(--accent);width:0%;transition:width .2s}.tabs{display:flex;gap:8px;overflow:auto;margin:14px 0}.tab,button{border:1px solid var(--line);border-radius:10px;padding:9px 13px;background:var(--panel2);color:var(--text);font:inherit;cursor:pointer}.tab.active,.primary{background:var(--accent);border-color:var(--accent);color:#082016;font-weight:700}.section{display:none}.section.active{display:block}.task{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.task:last-child{border:0}.task input{width:19px;height:19px;accent-color:var(--accent);margin-top:3px}.task.done span{text-decoration:line-through;color:var(--muted)}.task span{flex:1}.tag{font-size:11px;color:var(--blue);background:#83b7ff18;padding:3px 7px;border-radius:20px;white-space:nowrap}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row input,.row select,.row textarea,input[type=text],input[type=time]{background:#0c1727;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:10px;font:inherit;min-width:0}.row input[type=text]{flex:1}.schedule-item{display:grid;grid-template-columns:105px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.schedule-item:last-child{border:0}.schedule-item b{color:var(--accent)}.smallbtn{padding:5px 9px;font-size:12px}.danger{color:var(--danger)}.empty{color:var(--muted);padding:12px 0}.footer{color:var(--muted);font-size:12px;text-align:center;padding:20px}.notice{background:#83b7ff12;border:1px solid #83b7ff44;padding:12px;border-radius:12px;color:#c9ddfa;font-size:13px}
+@media(min-width:700px){.layout{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.layout .card{margin-bottom:0}.stats{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header><h1>💻 Developer Tracker</h1><div class="muted">Your beginner-to-software-developer preparation planner</div></header>
+<main>
+<section class="hero">
+ <div class="row" style="justify-content:space-between"><div><div class="muted">YOUR OVERALL PREPARATION</div><div style="font-size:34px;font-weight:800" id="overall">0%</div></div><span class="tag">3 hours / day</span></div>
+ <div class="progress"><div class="bar" id="overallBar"></div></div>
+ <div class="stats"><div class="stat"><strong id="doneCount">0</strong><small>Tasks done</small></div><div class="stat"><strong id="totalCount">0</strong><small>Total tasks</small></div><div class="stat"><strong id="streak">0</strong><small>Active study days*</small></div></div>
+ <small>*Counts days on which you mark a task complete on this device.</small>
+</section>
+<div class="tabs">
+ <button class="tab active" data-tab="roadmap">Roadmap</button><button class="tab" data-tab="today">Daily schedule</button><button class="tab" data-tab="custom">My tasks</button>
+</div>
+<section id="roadmap" class="section active">
+ <div class="card"><h2>Learning roadmap</h2><p class="muted">Tick topics as you finish them. Start with Java, then move through DSA, tools, projects and job preparation.</p><div id="phases"></div></div>
+</section>
+<section id="today" class="section">
+ <div class="layout">
+  <div class="card"><h2>Daily 3-hour timetable</h2><div id="schedule"></div><p class="muted">Adjust these blocks to fit around your college classes.</p></div>
+  <div class="card"><h2>Today's focus</h2><div class="muted" id="todayDate"></div><p>Use this simple routine every study day:</p><ul><li>60 min — learn a concept</li><li>60 min — code and practise</li><li>30 min — DSA / problem solving</li><li>30 min — revision and notes</li></ul><button class="primary" id="markStudy">Mark today as a study day</button><p class="muted" id="studyMsg"></p></div>
+ </div>
+</section>
+<section id="custom" class="section">
+ <div class="card"><h2>Add your own task</h2><div class="row"><input id="newTask" type="text" placeholder="e.g. Complete Java loops practice"><select id="newCategory"><option>Java</option><option>DSA</option><option>SQL</option><option>Git & GitHub</option><option>Web development</option><option>Projects</option><option>Interview preparation</option><option>Other</option></select><button class="primary" id="addTask">Add task</button></div><div id="customTasks"></div></div>
+</section>
+<div class="card">
+ <h2>Backup & app settings</h2>
+ <p class="muted">Your checklist is saved in this browser on this device. Export a backup regularly if you use more than one device.</p>
+ <div class="row"><button id="export">Export backup</button><button id="importBtn">Import backup</button><input type="file" id="importFile" accept="application/json" hidden><button id="reset" class="danger">Reset all progress</button></div>
+ <p class="muted" id="backupMsg"></p>
+</div>
+<div class="notice">Install tip: On Android, open the hosted app in Chrome and choose “Install app” or “Add to Home screen”. On Windows, open it in Edge or Chrome and choose the install icon in the address bar or browser menu. See README for hosting instructions.</div>
+<div class="footer">Developer Tracker · Progress is stored locally in your browser.</div>
+</main>
+<script>
+const phases=[
+{name:"Phase 1 · Programming foundations",items:["Understand what programming is","Learn computer and internet basics","Install Java JDK and a code editor","Write and run Hello World in Java","Learn variables and data types","Learn operators and user input","Practise if/else conditions","Practise loops","Learn methods and functions"]},
+{name:"Phase 2 · Core Java",items:["Learn arrays and strings","Understand classes and objects","Learn constructors and encapsulation","Learn inheritance and polymorphism","Learn interfaces and abstraction","Practise exception handling","Understand collections (List, Set, Map)"]},
+{name:"Phase 3 · Data structures & algorithms",items:["Learn time and space complexity basics","Practise array and string problems","Learn searching and sorting","Learn linked lists","Learn stacks and queues","Learn recursion","Learn hash maps and sets","Solve beginner coding problems regularly"]},
+{name:"Phase 4 · Tools & databases",items:["Learn SQL SELECT, WHERE and ORDER BY","Learn JOINs and GROUP BY","Practise basic database queries","Learn Git basics","Create a GitHub account and repository","Practise commit, push and pull"]},
+{name:"Phase 5 · Development skills",items:["Learn HTML and CSS basics","Learn JavaScript fundamentals","Understand HTTP and REST APIs","Learn Spring Boot fundamentals","Build a simple backend API","Connect an application to a database"]},
+{name:"Phase 6 · Projects & job preparation",items:["Build a calculator or small Java project","Build a task manager application","Build an employee management project","Write project READMEs and publish on GitHub","Prepare a one-page resume","Practise aptitude and communication","Practise Java and DSA interview questions","Apply for internships and entry-level roles"]}
+];
+const defaultSchedule=[["00:00–01:00","Learn concepts"],["01:00–02:00","Coding practice"],["02:00–02:30","DSA / problem solving"],["02:30–03:00","Revision and notes"]];
+const KEY="developerTracker_v1";
+let state=JSON.parse(localStorage.getItem(KEY)||'{"completed":{},"custom":[],"studyDays":[]}');
+function save(){localStorage.setItem(KEY,JSON.stringify(state));render();}
+function allTasks(){return phases.flatMap((p,pi)=>p.items.map((t,ti)=>({id:`${pi}-${ti}`,title:t}))).concat(state.custom.map(t=>({id:t.id,title:t.title})));}
+function render(){
+ const all=allTasks(),done=all.filter(t=>state.completed[t.id]).length,pct=all.length?Math.round(done/all.length*100):0;
+ document.getElementById("overall").textContent=pct+"%";document.getElementById("overallBar").style.width=pct+"%";
+ document.getElementById("doneCount").textContent=done;document.getElementById("totalCount").textContent=all.length;document.getElementById("streak").textContent=state.studyDays.length;
+ document.getElementById("phases").innerHTML=phases.map((p,pi)=>{let d=p.items.filter((_,ti)=>state.completed[`${pi}-${ti}`]).length;return `<div style="margin:16px 0"><div class="row" style="justify-content:space-between"><h3>${p.name}</h3><span class="tag">${d}/${p.items.length}</span></div><div class="progress"><div class="bar" style="width:${d/p.items.length*100}%"></div></div>${p.items.map((t,ti)=>taskHTML(`${pi}-${ti}`,t)).join("")}</div>`}).join("");
+ document.getElementById("schedule").innerHTML=defaultSchedule.map(x=>`<div class="schedule-item"><b>${x[0]}</b><div>${x[1]}</div></div>`).join("");
+ document.getElementById("customTasks").innerHTML=state.custom.length?state.custom.map(t=>`<div class="task ${state.completed[t.id]?'done':''}"><input type="checkbox" ${state.completed[t.id]?'checked':''} onchange="toggle('${t.id}',this.checked)"><span>${esc(t.title)} <small>· ${esc(t.category)}</small></span><button class="smallbtn danger" onclick="removeTask('${t.id}')">Delete</button></div>`).join(""):'<div class="empty">No custom tasks yet.</div>';
+}
+function taskHTML(id,title){return `<label class="task ${state.completed[id]?'done':''}"><input type="checkbox" ${state.completed[id]?'checked':''} onchange="toggle('${id}',this.checked)"><span>${title}</span></label>`}
+function toggle(id,v){state.completed[id]=v;save();}
+function removeTask(id){state.custom=state.custom.filter(t=>t.id!==id);delete state.completed[id];save();}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".tab,.section").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active")}));
+document.getElementById("addTask").onclick=()=>{let el=document.getElementById("newTask"),title=el.value.trim();if(!title)return;state.custom.push({id:"c-"+Date.now(),title,category:document.getElementById("newCategory").value});el.value="";save();};
+document.getElementById("todayDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+document.getElementById("markStudy").onclick=()=>{let d=new Date().toISOString().slice(0,10);if(!state.studyDays.includes(d))state.studyDays.push(d);save();document.getElementById("studyMsg").textContent="Today is marked as a study day."};
+document.getElementById("export").onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="developer-tracker-backup.json";a.click();URL.revokeObjectURL(a.href);document.getElementById("backupMsg").textContent="Backup exported."};
+document.getElementById("importBtn").onclick=()=>document.getElementById("importFile").click();
+document.getElementById("importFile").onchange=async e=>{try{let data=JSON.parse(await e.target.files[0].text());if(!data.completed||!Array.isArray(data.custom))throw Error();state=data;save();document.getElementById("backupMsg").textContent="Backup imported."}catch{document.getElementById("backupMsg").textContent="That backup file could not be read."}};
+document.getElementById("reset").onclick=()=>{if(confirm("Delete all checklist progress and custom tasks? Export a backup first if needed.")){state={completed:{},custom:[],studyDays:[]};save();}};
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+render();
+</script>
+</body></html>
